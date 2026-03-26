@@ -115,4 +115,34 @@
     }
 
     function startBattle() {
-        if (
+        if (inventory.length === 0) { addLog("Chưa có cây!"); return; }
+        
+        const arena = document.getElementById('arena');
+        arena.style.display = 'block';
+        let totalDmg = inventory.reduce((a, b) => a + b.dmg, 0);
+        let zombieHp = wave * 150;
+        let currentHp = zombieHp;
+
+        document.getElementById('btn-fight').disabled = true;
+        
+        let fight = setInterval(() => {
+            currentHp -= totalDmg;
+            let percent = (currentHp / zombieHp) * 100;
+            document.getElementById('hp-fill').style.width = Math.max(0, percent) + "%";
+            
+            if (currentHp <= 0) {
+                clearInterval(fight);
+                addLog(`Thắng Wave ${wave}!`);
+                gems += 100 + (wave * 20);
+                wave++;
+                setTimeout(() => { 
+                    arena.style.display = 'none'; 
+                    document.getElementById('btn-fight').disabled = false;
+                    updateUI();
+                }, 1500);
+            }
+        }, 800);
+    }
+</script>
+</body>
+</html>
