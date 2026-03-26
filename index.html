@@ -2,12 +2,12 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>PvZ 2 Gacha Edition</title>
+    <title>PvZ 2 Gacha World - Siêu Ổn Định</title>
     <style>
         :root {
             --common: #bdc3c7; --rare: #3498db; --epic: #9b59b6; --legendary: #f1c40f;
         }
-        body { background: #121212; color: #eee; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; }
+        body { background: #121212; color: #eee; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; text-align: center;}
         #game-container { max-width: 900px; margin: 0 auto; background: #23272a; padding: 25px; border-radius: 20px; box-shadow: 0 0 40px rgba(0,0,0,0.8); border: 2px solid #444; }
         
         .header-stats { display: flex; justify-content: space-around; background: #2ecc71; padding: 15px; border-radius: 12px; margin-bottom: 25px; font-size: 20px; font-weight: bold; color: #111; box-shadow: inset 0 -4px 0 rgba(0,0,0,0.2); }
@@ -20,30 +20,27 @@
         .btn:active { transform: translateY(2px); box-shadow: none; }
         .btn:disabled { background: #555; box-shadow: none; cursor: not-allowed; opacity: 0.6; }
 
-        .battle-view { display: none; background: url('https://static.wikia.nocookie.net/plantsvszombies/images/1/1b/Background_Day.jpg') center/cover; padding: 30px; border-radius: 15px; margin-bottom: 20px; border: 4px solid #27ae60; position: relative; min-height: 200px; }
-        .battle-overlay { position: absolute; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.3); border-radius: 11px; }
+        /* Nền trận đấu - Đã đổi thành link ảnh dự phòng ổn định */
+        .battle-view { display: none; background: url('https://placehold.co/800x200/27ae60/ecf0f1?text=ARENA'); background-size: cover; padding: 30px; border-radius: 15px; margin-bottom: 20px; border: 4px solid #fff; position: relative; min-height: 200px; }
         .battle-flex { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; }
         
         .hp-container { width: 250px; text-align: center; }
-        .hp-bar { height: 25px; background: #333; border: 2px solid #fff; border-radius: 15px; overflow: hidden; }
-        #hp-fill { height: 100%; background: #ff4757; width: 100%; transition: 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28); }
+        .hp-bar { height: 25px; background: #333; border: 2px solid #fff; border-radius: 15px; overflow: hidden; margin-top: 10px;}
+        #hp-fill { height: 100%; background: #ff4757; width: 100%; transition: 0.4s; }
 
-        .log-box { height: 120px; overflow-y: auto; background: rgba(0,0,0,0.7); padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 14px; color: #00ff00; border: 1px solid #444; margin-bottom: 20px; text-align: left; }
+        .log-box { height: 120px; overflow-y: auto; background: rgba(0,0,0,0.7); padding: 15px; border-radius: 8px; font-family: monospace; font-size: 14px; color: #00ff00; border: 1px solid #444; margin-bottom: 20px; text-align: left; }
 
         .inventory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 12px; padding: 10px; }
-        .card { background: #2f3136; border: 3px solid #555; border-radius: 12px; padding: 10px; text-align: center; transition: 0.3s; }
+        .card { background: #2f3136; border: 3px solid #555; border-radius: 12px; padding: 10px; text-align: center; }
         .card:hover { transform: scale(1.05); }
         .card img { width: 70px; height: 70px; object-fit: contain; }
         .card-name { font-size: 11px; font-weight: bold; margin: 5px 0; text-transform: uppercase; }
         .card-dmg { font-size: 12px; color: #ffab00; }
 
-        /* Rarity Styles */
         .rarity-COMMON { border-color: var(--common); }
         .rarity-RARE { border-color: var(--rare); box-shadow: 0 0 5px var(--rare); }
         .rarity-EPIC { border-color: var(--epic); box-shadow: 0 0 10px var(--epic); }
-        .rarity-LEGENDARY { border-color: var(--legendary); box-shadow: 0 0 20px var(--legendary); animation: pulse 1s infinite alternate; }
-        
-        @keyframes pulse { from { opacity: 0.8; } to { opacity: 1; transform: scale(1.08); } }
+        .rarity-LEGENDARY { border-color: var(--legendary); box-shadow: 0 0 20px var(--legendary); }
     </style>
 </head>
 <body>
@@ -63,11 +60,10 @@
     </div>
 
     <div id="battle-area" class="battle-view">
-        <div class="battle-overlay"></div>
         <div class="battle-flex">
             <div id="player-side" style="display: flex; gap: 5px; flex-wrap: wrap; width: 50%;"></div>
             <div class="hp-container">
-                <img id="zombie-img" src="https://static.wikia.nocookie.net/plantsvszombies/images/a/a6/ZombieHD.png" width="100">
+                <img id="zombie-img" src="https://placehold.co/100/1a1a1a/fff?text=ZOMBIE" width="100" style="border-radius:10px;">
                 <p id="zombie-name" style="font-weight:bold; margin: 5px 0;">Basic Zombie</p>
                 <div class="hp-bar"><div id="hp-fill"></div></div>
                 <small id="hp-text">100/100 HP</small>
@@ -75,9 +71,9 @@
         </div>
     </div>
 
-    <div class="log-box" id="log-box">Hệ thống: Chào mừng bạn đến với phiên bản PvZ 2!</div>
+    <div class="log-box" id="log-box">Hệ thống: Phiên bản Siêu ổn định (Placeholders). Sẵn sàng!</div>
 
-    <h3 style="border-left: 5px solid #2ecc71; padding-left: 10px; text-align: left;">Đội hình của bạn</h3>
+    <h3>Đội hình của bạn</h3>
     <div class="inventory-grid" id="inventory"></div>
 </div>
 
@@ -86,25 +82,25 @@
     let wave = 1;
     let inventory = [];
 
-    // DANH SÁCH CÂY PVZ 2
+    // CẬP NHẬT: Tất cả hình ảnh đã được đổi sang link dự phòngplacehold.co
+    // Định dạng: placehold.co/70x70/[màu_nền]/[màu_chữ]?text=[Tên_Cây]
     const plantPool = [
-        { name: "Peashooter", dmg: 20, rarity: "COMMON", img: "https://static.wikia.nocookie.net/plantsvszombies/images/1/14/PvZ_Peashooter.png" },
-        { name: "Cabbage-pult", dmg: 25, rarity: "COMMON", img: "https://static.wikia.nocookie.net/plantsvszombies/images/b/b3/Cabbage-pult2.png" },
-        { name: "Sunflower", dmg: 5, rarity: "COMMON", img: "https://static.wikia.nocookie.net/plantsvszombies/images/6/6b/PvZ_Sunflower.png" },
-        { name: "Repeater", dmg: 50, rarity: "RARE", img: "https://static.wikia.nocookie.net/plantsvszombies/images/c/c1/RepeaterPvZ2.png" },
-        { name: "Snapdragon", dmg: 65, rarity: "RARE", img: "https://static.wikia.nocookie.net/plantsvszombies/images/9/9b/SnapdragonPvZ2.png" },
-        { name: "Laser Bean", dmg: 130, rarity: "EPIC", img: "https://static.wikia.nocookie.net/plantsvszombies/images/1/14/LaserBean.png" },
-        { name: "Electric Pea", dmg: 160, rarity: "EPIC", img: "https://static.wikia.nocookie.net/plantsvszombies/images/6/62/Electric_Peashooter_HD.png" },
-        { name: "Winter Melon", dmg: 450, rarity: "LEGENDARY", img: "https://static.wikia.nocookie.net/plantsvszombies/images/1/12/WinterMelonPvZ2.png" },
-        { name: "Pokra", dmg: 600, rarity: "LEGENDARY", img: "https://static.wikia.nocookie.net/plantsvszombies/images/1/11/Pokra_HD.png" }
+        { name: "Peashooter", dmg: 20, rarity: "COMMON", img: "https://placehold.co/70x70/2ecc71/000?text=PEA" },
+        { name: "Cabbage-pult", dmg: 25, rarity: "COMMON", img: "https://placehold.co/70x70/1e8449/fff?text=CABBAGE" },
+        { name: "Sunflower", dmg: 5, rarity: "COMMON", img: "https://placehold.co/70x70/f1c40f/000?text=SUN" },
+        { name: "Repeater", dmg: 50, rarity: "RARE", img: "https://placehold.co/70x70/27ae60/fff?text=REPEAT" },
+        { name: "Snapdragon", dmg: 65, rarity: "RARE", img: "https://placehold.co/70x70/e67e22/000?text=SNAP" },
+        { name: "Laser Bean", dmg: 130, rarity: "EPIC", img: "https://placehold.co/70x70/3498db/fff?text=LASER" },
+        { name: "Electric Pea", dmg: 160, rarity: "EPIC", img: "https://placehold.co/70x70/f39c12/000?text=ELEC" },
+        { name: "Winter Melon", dmg: 450, rarity: "LEGENDARY", img: "https://placehold.co/70x70/9b59b6/fff?text=WINTER" },
+        { name: "Pokra", dmg: 600, rarity: "LEGENDARY", img: "https://placehold.co/70x70/e74c3c/fff?text=POKRA" }
     ];
 
-    // DANH SÁCH ZOMBIE THEO WAVE
     const zombieTypes = [
-        { name: "Basic Zombie", hp: 150, img: "https://static.wikia.nocookie.net/plantsvszombies/images/a/a6/ZombieHD.png" },
-        { name: "Conehead Zombie", hp: 350, img: "https://static.wikia.nocookie.net/plantsvszombies/images/d/d5/Conehead_Zombie_HD.png" },
-        { name: "Buckethead Zombie", hp: 800, img: "https://static.wikia.nocookie.net/plantsvszombies/images/b/b5/Buckethead_Zombie_HD.png" },
-        { name: "Gargantuar", hp: 3000, img: "https://static.wikia.nocookie.net/plantsvszombies/images/a/a2/Gargantuar_HD.png" }
+        { name: "Basic Zombie", hp: 150, color: "1a1a1a" },
+        { name: "Conehead Zombie", hp: 350, color: "d35400" },
+        { name: "Buckethead Zombie", hp: 800, color: "7f8c8d" },
+        { name: "Gargantuar", hp: 3000, color: "c0392b" }
     ];
 
     function addLog(msg) {
@@ -124,16 +120,17 @@
         else p = plantPool[Math.floor(Math.random()*2)+7]; // Legendary
 
         inventory.push({...p});
-        addLog(`[GACHA] Chúc mừng! Bạn nhận được ${p.name} (${p.rarity})`);
+        addLog(`[GACHA] Chúc mừng! Bạn nhận được ${p.name}`);
         updateUI();
         renderInventory();
     }
 
     function renderInventory() {
         const grid = document.getElementById('inventory');
+        if (inventory.length === 0) { grid.innerHTML = "<p>Bạn chưa có cây nào.</p>"; return; }
         grid.innerHTML = inventory.map(item => `
             <div class="card rarity-${item.rarity}">
-                <img src="${item.img}" onerror="this.src='https://placehold.co/70?text=PvZ2'">
+                <img src="${item.img}" onerror="this.src='https://placehold.co/70x70?text=ERROR'">
                 <div class="card-name">${item.name}</div>
                 <div class="card-dmg">⚔️ ${item.dmg}</div>
             </div>
@@ -141,25 +138,24 @@
     }
 
     function startBattle() {
-        if (inventory.length === 0) { addLog("Đội hình trống! Hãy quay Gacha."); return; }
+        if (inventory.length === 0) { addLog("Chưa có cây!"); return; }
         
         document.getElementById('btn-fight').disabled = true;
+        document.getElementById('btn-gacha').disabled = true;
         document.getElementById('battle-area').style.display = 'block';
         
-        // Chọn loại Zombie dựa trên Wave
         let zIdx = Math.min(Math.floor((wave-1)/5), 3);
         let zBase = zombieTypes[zIdx];
         let maxHp = zBase.hp + (wave * 50);
         let currentHp = maxHp;
         let totalDmg = inventory.reduce((s, p) => s + p.dmg, 0);
 
-        // Hiển thị Zombie
         document.getElementById('zombie-name').innerText = zBase.name;
-        document.getElementById('zombie-img').src = zBase.img;
+        // Đổi màu Zombie placeholdertheo wave
+        document.getElementById('zombie-img').src = `https://placehold.co/100/${zBase.color}/fff?text=ZOMBIE`;
         
-        // Hiển thị Cây trên sân
         document.getElementById('player-side').innerHTML = inventory.slice(-8).map(p => 
-            `<img src="${p.img}" width="40" style="filter: drop-shadow(0 0 5px #fff);">`
+            `<img src="${p.img}" width="40" style="border: 1px solid #fff; border-radius:5px;">`
         ).join('');
 
         addLog(`TRẬN CHIẾN: Wave ${wave} - ${zBase.name} xuất hiện!`);
@@ -174,12 +170,12 @@
                 clearInterval(fightClock);
                 let reward = 100 + (wave * 30);
                 gems += reward;
-                addLog(`CHIẾN THẮNG! Wave ${wave} vượt qua. Nhận ${reward}💎`);
+                addLog(`CHIẾN THẮNG! Nhận ${reward}💎`);
                 wave++;
                 finishBattle();
-            } else if (Math.random() > 0.95) { // Tỉ lệ thua nhỏ nếu không đủ mạnh
+            } else if (Math.random() > 0.95 && totalDmg < 50) { 
                 clearInterval(fightClock);
-                addLog("THẤT BẠI! Lũ Zombie đã đột nhập vào nhà.");
+                addLog("THẤT BẠI! Cần thêm cây mạnh hơn.");
                 finishBattle();
             }
         }, 600);
@@ -189,8 +185,9 @@
         setTimeout(() => {
             document.getElementById('battle-area').style.display = 'none';
             document.getElementById('btn-fight').disabled = false;
+            document.getElementById('btn-gacha').disabled = false;
             updateUI();
-        }, 2000);
+        }, 1500);
     }
 
     function updateUI() {
@@ -200,6 +197,7 @@
     }
 
     updateUI();
+    renderInventory();
 </script>
 </body>
 </html>
