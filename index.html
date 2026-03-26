@@ -2,79 +2,195 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>PvZ Gacha Web - Fixed</title>
+    <title>PvZ 2 Gacha Edition</title>
     <style>
-        body { background: #1a252f; color: #ecf0f1; font-family: 'Segoe UI', sans-serif; text-align: center; margin: 0; padding: 20px; }
-        #game-container { max-width: 700px; margin: 0 auto; background: #2c3e50; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 2px solid #34495e; }
-        .stats { display: flex; justify-content: space-around; background: #27ae60; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-weight: bold; font-size: 18px; border-bottom: 4px solid #1e8449; }
+        :root {
+            --common: #bdc3c7; --rare: #3498db; --epic: #9b59b6; --legendary: #f1c40f;
+        }
+        body { background: #121212; color: #eee; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; }
+        #game-container { max-width: 900px; margin: 0 auto; background: #23272a; padding: 25px; border-radius: 20px; box-shadow: 0 0 40px rgba(0,0,0,0.8); border: 2px solid #444; }
         
-        .btn-group { margin-bottom: 20px; }
-        .btn { padding: 12px 20px; margin: 5px; cursor: pointer; border-radius: 8px; font-weight: bold; border: none; transition: 0.2s; font-size: 16px; }
-        #btn-gacha { background: #e67e22; color: white; border-bottom: 4px solid #d35400; }
-        #btn-fight { background: #3498db; color: white; border-bottom: 4px solid #2980b9; }
-        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
-        .btn:active { transform: translateY(2px); border-bottom-width: 0; }
-        .btn:disabled { background: #7f8c8d; border: none; cursor: not-allowed; }
+        .header-stats { display: flex; justify-content: space-around; background: #2ecc71; padding: 15px; border-radius: 12px; margin-bottom: 25px; font-size: 20px; font-weight: bold; color: #111; box-shadow: inset 0 -4px 0 rgba(0,0,0,0.2); }
+        
+        .btn-zone { margin-bottom: 25px; }
+        .btn { padding: 15px 30px; margin: 5px; cursor: pointer; border-radius: 10px; font-weight: bold; border: none; font-size: 18px; transition: 0.3s; }
+        #btn-gacha { background: #e67e22; color: white; box-shadow: 0 5px 0 #d35400; }
+        #btn-fight { background: #3498db; color: white; box-shadow: 0 5px 0 #2980b9; }
+        .btn:hover { transform: translateY(-3px); filter: brightness(1.1); }
+        .btn:active { transform: translateY(2px); box-shadow: none; }
+        .btn:disabled { background: #555; box-shadow: none; cursor: not-allowed; opacity: 0.6; }
 
-        .log { height: 100px; overflow-y: auto; background: #000; padding: 10px; text-align: left; font-family: monospace; font-size: 13px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #444; color: #2ecc71; }
+        .battle-view { display: none; background: url('https://static.wikia.nocookie.net/plantsvszombies/images/1/1b/Background_Day.jpg') center/cover; padding: 30px; border-radius: 15px; margin-bottom: 20px; border: 4px solid #27ae60; position: relative; min-height: 200px; }
+        .battle-overlay { position: absolute; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.3); border-radius: 11px; }
+        .battle-flex { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; }
         
-        .card-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; min-height: 100px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 10px; }
-        .card { background: #34495e; border: 2px solid #95a5a6; border-radius: 8px; padding: 8px; width: 85px; text-align: center; }
-        .card img { width: 60px; height: 60px; object-fit: contain; }
-        .card p { margin: 5px 0 0 0; font-size: 11px; font-weight: bold; }
-        
-        .rarity-LEGENDARY { border-color: #f1c40f; box-shadow: 0 0 10px #f1c40f; color: #f1c40f; }
+        .hp-container { width: 250px; text-align: center; }
+        .hp-bar { height: 25px; background: #333; border: 2px solid #fff; border-radius: 15px; overflow: hidden; }
+        #hp-fill { height: 100%; background: #ff4757; width: 100%; transition: 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28); }
 
-        #arena { display: none; margin: 20px 0; padding: 15px; background: #27ae60; border-radius: 10px; border: 3px solid #1e8449; }
-        .hp-bar { width: 100%; height: 20px; background: #555; border-radius: 10px; margin-top: 10px; position: relative; overflow: hidden; }
-        #hp-fill { height: 100%; background: #e74c3c; width: 100%; transition: 0.3s; }
+        .log-box { height: 120px; overflow-y: auto; background: rgba(0,0,0,0.7); padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 14px; color: #00ff00; border: 1px solid #444; margin-bottom: 20px; text-align: left; }
+
+        .inventory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 12px; padding: 10px; }
+        .card { background: #2f3136; border: 3px solid #555; border-radius: 12px; padding: 10px; text-align: center; transition: 0.3s; }
+        .card:hover { transform: scale(1.05); }
+        .card img { width: 70px; height: 70px; object-fit: contain; }
+        .card-name { font-size: 11px; font-weight: bold; margin: 5px 0; text-transform: uppercase; }
+        .card-dmg { font-size: 12px; color: #ffab00; }
+
+        /* Rarity Styles */
+        .rarity-COMMON { border-color: var(--common); }
+        .rarity-RARE { border-color: var(--rare); box-shadow: 0 0 5px var(--rare); }
+        .rarity-EPIC { border-color: var(--epic); box-shadow: 0 0 10px var(--epic); }
+        .rarity-LEGENDARY { border-color: var(--legendary); box-shadow: 0 0 20px var(--legendary); animation: pulse 1s infinite alternate; }
+        
+        @keyframes pulse { from { opacity: 0.8; } to { opacity: 1; transform: scale(1.08); } }
     </style>
 </head>
 <body>
 
 <div id="game-container">
-    <h1>🌻 PvZ Gacha Web 🧟</h1>
+    <h1>🌻 PvZ 2: Gacha World 🧟</h1>
     
-    <div class="stats">
-        <span>💎 <span id="gems">500</span></span>
+    <div class="header-stats">
+        <span>💎 Gems: <span id="gems">1000</span></span>
         <span>🌊 Wave: <span id="wave">1</span></span>
-        <span>🎒 <span id="count">0</span> cây</span>
+        <span>🎒 Cây: <span id="count">0</span></span>
     </div>
 
-    <div class="btn-group">
-        <button class="btn" id="btn-gacha" onclick="rollGacha()">🎲 Quay Gacha (100 Gems)</button>
-        <button class="btn" id="btn-fight" onclick="startBattle()">⚔️ Chiến đấu!</button>
+    <div class="btn-zone">
+        <button class="btn" id="btn-gacha" onclick="rollGacha()">🎲 QUAY GACHA (100💎)</button>
+        <button class="btn" id="btn-fight" onclick="startBattle()">⚔️ XUNG TRẬN!</button>
     </div>
 
-    <div id="arena">
-        <h4 id="battle-status">Đang chiến đấu...</h4>
-        <div class="hp-bar"><div id="hp-fill"></div></div>
+    <div id="battle-area" class="battle-view">
+        <div class="battle-overlay"></div>
+        <div class="battle-flex">
+            <div id="player-side" style="display: flex; gap: 5px; flex-wrap: wrap; width: 50%;"></div>
+            <div class="hp-container">
+                <img id="zombie-img" src="https://static.wikia.nocookie.net/plantsvszombies/images/a/a6/ZombieHD.png" width="100">
+                <p id="zombie-name" style="font-weight:bold; margin: 5px 0;">Basic Zombie</p>
+                <div class="hp-bar"><div id="hp-fill"></div></div>
+                <small id="hp-text">100/100 HP</small>
+            </div>
+        </div>
     </div>
 
-    <div class="log" id="log">Hệ thống: Sẵn sàng!</div>
+    <div class="log-box" id="log-box">Hệ thống: Chào mừng bạn đến với phiên bản PvZ 2!</div>
 
-    <h3>Đội hình của bạn</h3>
-    <div class="card-container" id="inventory"></div>
+    <h3 style="border-left: 5px solid #2ecc71; padding-left: 10px; text-align: left;">Đội hình của bạn</h3>
+    <div class="inventory-grid" id="inventory"></div>
 </div>
 
 <script>
-    let gems = 500;
+    let gems = 1000;
     let wave = 1;
     let inventory = [];
 
-    const pool = [
-        { name: "Peashooter", dmg: 20, rarity: "COMMON", img: "https://vignette.wikia.nocookie.net/plantsvszombies/images/1/14/PvZ_Peashooter.png" },
-        { name: "Sunflower", dmg: 5, rarity: "COMMON", img: "https://vignette.wikia.nocookie.net/plantsvszombies/images/6/6b/PvZ_Sunflower.png" },
-        { name: "Snow Pea", dmg: 35, rarity: "RARE", img: "https://vignette.wikia.nocookie.net/plantsvszombies/images/f/f6/PvZ_Snow_Pea.png" },
-        { name: "Cherry Bomb", dmg: 150, rarity: "EPIC", img: "https://vignette.wikia.nocookie.net/plantsvszombies/images/3/36/PvZ_Cherry_Bomb.png" },
-        { name: "Cob Cannon", dmg: 300, rarity: "LEGENDARY", img: "https://vignette.wikia.nocookie.net/plantsvszombies/images/1/18/PvZ_Cob_Cannon.png" }
+    // DANH SÁCH CÂY PVZ 2
+    const plantPool = [
+        { name: "Peashooter", dmg: 20, rarity: "COMMON", img: "https://static.wikia.nocookie.net/plantsvszombies/images/1/14/PvZ_Peashooter.png" },
+        { name: "Cabbage-pult", dmg: 25, rarity: "COMMON", img: "https://static.wikia.nocookie.net/plantsvszombies/images/b/b3/Cabbage-pult2.png" },
+        { name: "Sunflower", dmg: 5, rarity: "COMMON", img: "https://static.wikia.nocookie.net/plantsvszombies/images/6/6b/PvZ_Sunflower.png" },
+        { name: "Repeater", dmg: 50, rarity: "RARE", img: "https://static.wikia.nocookie.net/plantsvszombies/images/c/c1/RepeaterPvZ2.png" },
+        { name: "Snapdragon", dmg: 65, rarity: "RARE", img: "https://static.wikia.nocookie.net/plantsvszombies/images/9/9b/SnapdragonPvZ2.png" },
+        { name: "Laser Bean", dmg: 130, rarity: "EPIC", img: "https://static.wikia.nocookie.net/plantsvszombies/images/1/14/LaserBean.png" },
+        { name: "Electric Pea", dmg: 160, rarity: "EPIC", img: "https://static.wikia.nocookie.net/plantsvszombies/images/6/62/Electric_Peashooter_HD.png" },
+        { name: "Winter Melon", dmg: 450, rarity: "LEGENDARY", img: "https://static.wikia.nocookie.net/plantsvszombies/images/1/12/WinterMelonPvZ2.png" },
+        { name: "Pokra", dmg: 600, rarity: "LEGENDARY", img: "https://static.wikia.nocookie.net/plantsvszombies/images/1/11/Pokra_HD.png" }
+    ];
+
+    // DANH SÁCH ZOMBIE THEO WAVE
+    const zombieTypes = [
+        { name: "Basic Zombie", hp: 150, img: "https://static.wikia.nocookie.net/plantsvszombies/images/a/a6/ZombieHD.png" },
+        { name: "Conehead Zombie", hp: 350, img: "https://static.wikia.nocookie.net/plantsvszombies/images/d/d5/Conehead_Zombie_HD.png" },
+        { name: "Buckethead Zombie", hp: 800, img: "https://static.wikia.nocookie.net/plantsvszombies/images/b/b5/Buckethead_Zombie_HD.png" },
+        { name: "Gargantuar", hp: 3000, img: "https://static.wikia.nocookie.net/plantsvszombies/images/a/a2/Gargantuar_HD.png" }
     ];
 
     function addLog(msg) {
-        const logBox = document.getElementById('log');
-        if(logBox) {
-            logBox.innerHTML = `> ${msg}<br>` + logBox.innerHTML;
-        }
+        const box = document.getElementById('log-box');
+        box.innerHTML = `> ${msg}<br>` + box.innerHTML;
+    }
+
+    function rollGacha() {
+        if (gems < 100) { addLog("Hết tiền rồi! Hãy đi đánh Zombie."); return; }
+        gems -= 100;
+        
+        let r = Math.random() * 100;
+        let p;
+        if (r < 65) p = plantPool[Math.floor(Math.random()*3)]; // Common
+        else if (r < 90) p = plantPool[Math.floor(Math.random()*2)+3]; // Rare
+        else if (r < 98) p = plantPool[Math.floor(Math.random()*2)+5]; // Epic
+        else p = plantPool[Math.floor(Math.random()*2)+7]; // Legendary
+
+        inventory.push({...p});
+        addLog(`[GACHA] Chúc mừng! Bạn nhận được ${p.name} (${p.rarity})`);
+        updateUI();
+        renderInventory();
+    }
+
+    function renderInventory() {
+        const grid = document.getElementById('inventory');
+        grid.innerHTML = inventory.map(item => `
+            <div class="card rarity-${item.rarity}">
+                <img src="${item.img}" onerror="this.src='https://placehold.co/70?text=PvZ2'">
+                <div class="card-name">${item.name}</div>
+                <div class="card-dmg">⚔️ ${item.dmg}</div>
+            </div>
+        `).join('');
+    }
+
+    function startBattle() {
+        if (inventory.length === 0) { addLog("Đội hình trống! Hãy quay Gacha."); return; }
+        
+        document.getElementById('btn-fight').disabled = true;
+        document.getElementById('battle-area').style.display = 'block';
+        
+        // Chọn loại Zombie dựa trên Wave
+        let zIdx = Math.min(Math.floor((wave-1)/5), 3);
+        let zBase = zombieTypes[zIdx];
+        let maxHp = zBase.hp + (wave * 50);
+        let currentHp = maxHp;
+        let totalDmg = inventory.reduce((s, p) => s + p.dmg, 0);
+
+        // Hiển thị Zombie
+        document.getElementById('zombie-name').innerText = zBase.name;
+        document.getElementById('zombie-img').src = zBase.img;
+        
+        // Hiển thị Cây trên sân
+        document.getElementById('player-side').innerHTML = inventory.slice(-8).map(p => 
+            `<img src="${p.img}" width="40" style="filter: drop-shadow(0 0 5px #fff);">`
+        ).join('');
+
+        addLog(`TRẬN CHIẾN: Wave ${wave} - ${zBase.name} xuất hiện!`);
+
+        let fightClock = setInterval(() => {
+            currentHp -= totalDmg;
+            let percent = Math.max(0, (currentHp/maxHp)*100);
+            document.getElementById('hp-fill').style.width = percent + "%";
+            document.getElementById('hp-text').innerText = `${Math.max(0, Math.floor(currentHp))}/${maxHp} HP`;
+
+            if (currentHp <= 0) {
+                clearInterval(fightClock);
+                let reward = 100 + (wave * 30);
+                gems += reward;
+                addLog(`CHIẾN THẮNG! Wave ${wave} vượt qua. Nhận ${reward}💎`);
+                wave++;
+                finishBattle();
+            } else if (Math.random() > 0.95) { // Tỉ lệ thua nhỏ nếu không đủ mạnh
+                clearInterval(fightClock);
+                addLog("THẤT BẠI! Lũ Zombie đã đột nhập vào nhà.");
+                finishBattle();
+            }
+        }, 600);
+    }
+
+    function finishBattle() {
+        setTimeout(() => {
+            document.getElementById('battle-area').style.display = 'none';
+            document.getElementById('btn-fight').disabled = false;
+            updateUI();
+        }, 2000);
     }
 
     function updateUI() {
@@ -83,66 +199,7 @@
         document.getElementById('count').innerText = inventory.length;
     }
 
-    function rollGacha() {
-        if (gems < 100) {
-            addLog("Không đủ Gems!");
-            return;
-        }
-        gems -= 100;
-        
-        let rand = Math.random() * 100;
-        let item;
-        if (rand < 60) item = pool[Math.floor(Math.random()*2)];
-        else if (rand < 90) item = pool[2];
-        else if (rand < 98) item = pool[3];
-        else item = pool[4];
-
-        inventory.push(item);
-        addLog(`Bạn nhận được: ${item.name}!`);
-        updateUI();
-        renderInventory();
-    }
-
-    function renderInventory() {
-        const div = document.getElementById('inventory');
-        div.innerHTML = inventory.map(p => `
-            <div class="card rarity-${p.rarity}">
-                <img src="${p.img}" onerror="this.src='https://placehold.co/60?text=Plant'">
-                <p>${p.name}</p>
-                <p>⚔️${p.dmg}</p>
-            </div>
-        `).join('');
-    }
-
-    function startBattle() {
-        if (inventory.length === 0) { addLog("Chưa có cây!"); return; }
-        
-        const arena = document.getElementById('arena');
-        arena.style.display = 'block';
-        let totalDmg = inventory.reduce((a, b) => a + b.dmg, 0);
-        let zombieHp = wave * 150;
-        let currentHp = zombieHp;
-
-        document.getElementById('btn-fight').disabled = true;
-        
-        let fight = setInterval(() => {
-            currentHp -= totalDmg;
-            let percent = (currentHp / zombieHp) * 100;
-            document.getElementById('hp-fill').style.width = Math.max(0, percent) + "%";
-            
-            if (currentHp <= 0) {
-                clearInterval(fight);
-                addLog(`Thắng Wave ${wave}!`);
-                gems += 100 + (wave * 20);
-                wave++;
-                setTimeout(() => { 
-                    arena.style.display = 'none'; 
-                    document.getElementById('btn-fight').disabled = false;
-                    updateUI();
-                }, 1500);
-            }
-        }, 800);
-    }
+    updateUI();
 </script>
 </body>
 </html>
