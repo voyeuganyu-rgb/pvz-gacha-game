@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>PvZ Gacha Web</title>
+    <style>
+        body { background: #222; color: #fff; font-family: sans-serif; text-align: center; }
+        #game-container { border: 2px solid #555; padding: 20px; max-width: 600px; margin: 20px auto; background: #333; }
+        .btn { padding: 10px 20px; margin: 10px; cursor: pointer; background: #4CAF50; color: white; border: none; border-radius: 5px; }
+        .log { height: 150px; overflow-y: scroll; background: #000; padding: 10px; text-align: left; font-size: 14px; color: #0f0; }
+        .rarity-LEGENDARY { color: #ff00ff; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Plants vs Zombies: Gacha</h1>
+    <div id="game-container">
+        <p>Gems: <span id="gems">500</span> | Wave: <span id="wave">1</span></p>
+        <button class="btn" onclick="rollGacha()">Quay Gacha (100 Gems)</button>
+        <button class="btn" onclick="fight()">Chiến đấu!</button>
+        <div class="log" id="log">Chào mừng bạn đến với PvZ Gacha!</div>
+        <h3>Đội hình của bạn:</h3>
+        <div id="inventory">Chưa có cây nào.</div>
+    </div>
+
+    <script>
+        let gems = 500;
+        let wave = 1;
+        let inventory = [];
+        const pool = [
+            { name: "Peashooter", dmg: 20, rarity: "COMMON" },
+            { name: "Snow Pea", dmg: 35, rarity: "RARE" },
+            { name: "Cherry Bomb", dmg: 150, rarity: "EPIC" },
+            { name: "Cob Cannon", dmg: 300, rarity: "LEGENDARY" }
+        ];
+
+        function addLog(msg, color = "") {
+            const log = document.getElementById('log');
+            log.innerHTML += `<p class="${color}">${msg}</p>`;
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function rollGacha() {
+            if (gems < 100) { addLog("❌ Không đủ Gems!"); return; }
+            gems -= 100;
+            document.getElementById('gems').innerText = gems;
+            
+            let chance = Math.random() * 100;
+            let result;
+            if (chance < 60) result = pool[0];
+            else if (chance < 90) result = pool[1];
+            else if (chance < 98) result = pool[2];
+            else result = pool[3];
+
+            inventory.push(result);
+            addLog(`🎉 Bạn nhận được: ${result.name}!`, "rarity-" + result.rarity);
+            updateInventory();
+        }
+
+        function updateInventory() {
+            const invDiv = document.getElementById('inventory');
+            invDiv.innerHTML = inventory.map(p => `${p.name} (ATK: ${p.dmg})`).join(", ");
+        }
+
+        function fight() {
+            let totalDmg = inventory.reduce((sum, p) => sum + p.dmg, 0);
+            let hp = wave * 100;
+            if (totalDmg >= hp) {
+                let reward = 50 + (wave * 20);
+                gems += reward;
+                addLog(`✅ Thắng Wave ${wave}! Nhận ${reward} Gems.`);
+                wave++;
+                document.getElementById('wave').innerText = wave;
+                document.getElementById('gems').innerText = gems;
+            } else {
+                addLog("❌ Thua rồi! Cần thêm cây mạnh hơn.");
+            }
+        }
+    </script>
+</body>
+</html>
