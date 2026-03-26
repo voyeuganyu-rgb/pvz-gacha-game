@@ -5,37 +5,56 @@
     <title>PvZ Gacha Web</title>
     <style>
         body { background: #2c3e50; color: #ecf0f1; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; margin: 0; padding: 10px; }
-        h1 { color: #2ecc71; text-shadow: 2px 2px #000; }
+        h1 { color: #2ecc71; text-shadow: 2px 2px #000; margin-bottom: 5px; }
         #game-container { max-width: 800px; margin: 0 auto; background: #34495e; padding: 20px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.5); }
-        .stats { font-size: 20px; font-weight: bold; margin-bottom: 15px; background: #1abc9c; padding: 10px; border-radius: 5px; color: #fff; }
+        .stats { font-size: 20px; font-weight: bold; margin-bottom: 15px; background: #1abc9c; padding: 10px; border-radius: 5px; color: #fff; display: flex; justify-content: space-around; }
         
         .btn { padding: 12px 24px; margin: 5px; cursor: pointer; background: #e67e22; color: white; border: 2px solid #d35400; border-radius: 8px; font-size: 16px; font-weight: bold; transition: 0.2s; }
         .btn:hover { background: #d35400; transform: scale(1.05); }
         .btn:disabled { background: #7f8c8d; border-color: #95a5a6; cursor: not-allowed; transform: none; }
 
         /* Giao diện Thẻ Cây */
-        .card-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px; }
-        .card { background: #222; border: 3px solid; border-radius: 8px; padding: 10px; width: 90px; text-align: center; }
-        .card img { width: 70px; height: 70px; object-fit: cover; border-radius: 5px; background: #fff; }
-        .card p { margin: 5px 0 0 0; font-size: 12px; font-weight: bold; }
+        .card-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px; min-height: 120px;}
+        .card { background: #222; border: 3px solid; border-radius: 8px; padding: 10px; width: 90px; text-align: center; transition: 0.3s; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 5px 10px rgba(0,0,0,0.5); }
+        .card img { width: 70px; height: 70px; object-fit: contain; }
+        .card p { margin: 5px 0 0 0; font-size: 12px; font-weight: bold; text-transform: uppercase;}
         
         /* Màu theo độ hiếm */
         .rarity-COMMON { border-color: #bdc3c7; color: #bdc3c7; }
         .rarity-RARE { border-color: #3498db; color: #3498db; }
         .rarity-EPIC { border-color: #9b59b6; color: #9b59b6; }
-        .rarity-LEGENDARY { border-color: #f1c40f; color: #f1c40f; text-shadow: 0 0 5px #f1c40f; }
+        .rarity-LEGENDARY { border-color: #f1c40f; color: #f1c40f; text-shadow: 0 0 5px #f1c40f; animation: glow 1.5s infinite alternate; }
+        
+        @keyframes glow {
+            from { box-shadow: 0 0 5px #f1c40f; }
+            to { box-shadow: 0 0 20px #f1c40f; }
+        }
 
-        /* Giao diện Sân đấu */
-        #arena { display: none; margin-top: 20px; border: 4px solid #27ae60; background: #8e44ad; border-radius: 10px; padding: 20px; position: relative; }
-        .arena-flex { display: flex; justify-content: space-between; align-items: center; }
-        .plant-army { display: flex; flex-wrap: wrap; gap: 5px; width: 50%; }
-        .zombie-boss { width: 40%; text-align: center; }
-        .zombie-boss img { width: 100px; height: 100px; }
+        /* Giao diện Sân đấu (Arena) */
+        #arena { display: none; margin-top: 20px; border: 4px solid #27ae60; background: url('https://static.wikia.nocookie.net/plantsvszombies/images/1/1b/Background_Day.jpg/revision/latest?cb=20150915014109') no-repeat center center; background-size: cover; border-radius: 10px; padding: 20px; position: relative; }
+        .arena-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); border-radius: 6px; }
+        .arena-content { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: center; }
+        .plant-army { display: flex; flex-wrap: wrap; gap: 10px; width: 55%; justify-content: center;}
+        .zombie-boss { width: 40%; text-align: center; color: white; text-shadow: 1px 1px 2px black;}
+        .zombie-boss img { width: 120px; height: 120px; object-fit: contain; }
         
         /* Thanh máu Zombie */
         .hp-bg { width: 100%; height: 25px; background: #555; border: 2px solid #fff; border-radius: 10px; margin-top: 10px; overflow: hidden; position: relative; }
         .hp-fill { height: 100%; background: #e74c3c; width: 100%; transition: width 0.3s ease-out; }
         .hp-text { position: absolute; top: 2px; left: 0; width: 100%; text-align: center; font-size: 14px; font-weight: bold; color: white; }
 
-        .log { height: 120px; overflow-y: scroll; background: #000; padding: 10px; text-align: left; font-size: 14px; border-radius: 5px; margin-top: 15px; font-family: monospace; border: 1px solid #555;}
-        .log
+        .log { height: 120px; overflow-y: scroll; background: rgba(0,0,0,0.8); padding: 10px; text-align: left; font-size: 14px; border-radius: 5px; margin-top: 15px; font-family: monospace; border: 1px solid #555;}
+        .log p { margin: 2px 0; }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <h1>🌻 PvZ Gacha Web 🧟</h1>
+        <div class="stats">
+            <span>💎 Gems: <span id="gems">500</span></span>
+            <span>🌊 Wave: <span id="wave">1</span></span>
+            <span>🎒 Túi: <span id="plant-count">0</span></span>
+        </div>
+        
+        <button class="btn" id="btn-gacha" onclick="rollGacha()">🎲 Quay Gacha (100 Gems)</button>
